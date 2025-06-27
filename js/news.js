@@ -12,7 +12,7 @@ function toggleTheme() {
       const container = document.getElementById('news-container');
       const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
 
-      fetch('${CORS_PROXY}https://newsapi.org/v2/top-headlines?category=business&language=en&pageSize=5&apiKey=361b4c2a8cd94ac69593c81f86bbf669')
+      fetch(`${CORS_PROXY}https://newsapi.org/v2/top-headlines?category=business&language=en&pageSize=5&apiKey=361b4c2a8cd94ac69593c81f86bbf669`)
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data.articles)) {
