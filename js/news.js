@@ -11,8 +11,9 @@ function toggleTheme() {
 
       const container = document.getElementById('news-container');
       const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+      const NEWS_API_KEY = '00LFBtJzDoQgaoRiT1y4Z2Q0vup5iZtFEU5vhUXo';
 
-      fetch(`${CORS_PROXY}https://newsapi.org/v2/top-headlines?category=business&language=en&pageSize=5&apiKey=361b4c2a8cd94ac69593c81f86bbf669`)
+      fetch(`${CORS_PROXY}https://api.marketaux.com/v1/news/all?countries=us&filter_entities=true&language=en&api_token=${00LFBtJzDoQgaoRiT1y4Z2Q0vup5iZtFEU5vhUXo}`)
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data.articles)) {
@@ -20,7 +21,7 @@ function toggleTheme() {
               const card = document.createElement('div');
               card.className = 'news-card';
               card.innerHTML = `
-                <img src="${article.urlToImage || 'https://via.placeholder.com/120x80'}" alt="News Image">
+                <img src="${article.image_url || 'https://via.placeholder.com/120x80'}" alt="News Image">
                 <div class="news-details">
                   <h3>${article.title}</h3>
                   <p>${article.description || 'No summary available.'}</p>
