@@ -16,8 +16,10 @@ function toggleTheme() {
       fetch(`${CORS_PROXY}https://api.marketaux.com/v1/news/all?countries=us&filter_entities=true&language=en&api_token=${NEWS_API_KEY}`)
         .then(res => res.json())
         .then(data => {
-          if (Array.isArray(data.data)) {
-            data.articles.forEach(article => {
+          console.log('Full API Response:', data);
+              
+          if (data && Array.isArray(data.data)) {
+            data.data.forEach(article => {
               const card = document.createElement('div');
               card.className = 'news-card';
               card.innerHTML = `
