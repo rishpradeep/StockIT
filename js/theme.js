@@ -18,8 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-    const pieCtx = document.getElementById('pieChart').getContext('2d');
-    new Chart(pieCtx, {
+    const pieCanvas = document.getElementById('pieChart');
+    if (pieCanvas){
+        const pieCtx = pieCanvas.getContext('2d');
+        new Chart(pieCtx, {
       type: 'pie',
       data: {
         labels: ['SBUX', 'MBG.BE', 'NVDA', 'VWAGY'],
@@ -29,8 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }]
       }
     });
+    }
 
-    const barCtx = document.getElementById('barChart').getContext('2d');
+    const barCanvas = document.getElementById('barChart');
+    if (barCanvas) {
+        const barCtx = barCanvas.getContext('2d');
     new Chart(barCtx, {
       type: 'bar',
       data: {
@@ -49,5 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     });
+    }
 
     
