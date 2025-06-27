@@ -13,7 +13,7 @@ function toggleTheme() {
       const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
       const NEWS_API_KEY = '00LFBtJzDoQgaoRiT1y4Z2Q0vup5iZtFEU5vhUXo';
 
-      fetch(`${CORS_PROXY}https://api.marketaux.com/v1/news/all?countries=us&filter_entities=true&language=en&api_token=${00LFBtJzDoQgaoRiT1y4Z2Q0vup5iZtFEU5vhUXo}`)
+      fetch(`${CORS_PROXY}https://api.marketaux.com/v1/news/all?countries=us&filter_entities=true&language=en&api_token=${NEWS_API_KEY}`)
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data.articles)) {
