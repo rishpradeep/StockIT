@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register | StockIT</title>
+  <link rel="stylesheet" href="fontawesome-all.min.css" />
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("signup-form");
+    if (!form) return;
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+
+      if (!name || !email) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      // Save user info in localStorage
+      localStorage.setItem("user", JSON.stringify({ name, email }));
+
+      // Redirect to dashboard
+      window.location.href = "main.html";
+    });
+  });
+</script>
+
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: url('stock_back.png') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+
+    .registration-container {
+      background: rgba(0, 0, 0, 0.85);
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .registration-container h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .registration-container p {
+      font-size: 14px;
+      color: #ccc;
+      margin-bottom: 30px;
+    }
+
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background: #222;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+    }
+
+    form input[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background: #00ffd5;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    form input[type="submit"]:hover {
+      background: #00cca8;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .icons {
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .icons li {
+      display: inline-block;
+      margin: 0 5px;
+    }
+
+    .icons a {
+      color: #fff;
+      font-size: 18px;
+      text-decoration: none;
+    }
+
+    .icons a:hover {
+      color: #00ffd5;
+    }
+  </style>
+</head>
+<body>
+  <div class="registration-container">
+    <h1>Create Your StockIT Account</h1>
+    <p>Get started with personalized portfolio insights and real-time trading tools.</p>
+    <form id="signup-form" method="post" action="main.html">
+      <input type="text" name="name" id="name" placeholder="Full Name" required />
+      <input type="email" name="email" id="email" placeholder="Email Address" required />
+      <input type="password" name="password" id="password" placeholder="Password" required />
+      <input type="submit" value="Sign Up" />
+    </form>
+  </div>
+
+  <footer>
+    <ul class="icons">
+      <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+      <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+      <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+      <li><a href="#" class="icon fa-envelope"><span class="label">Email</span></a></li>
+    </ul>
+    <p>&copy; StockIT. Design by <a href="http://html5up.net" style="color: #00ffd5;">HTML5 UP</a></p>
+  </footer>
+</body>
+</html>

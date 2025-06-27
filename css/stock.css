@@ -1,0 +1,88 @@
+
+    :root {
+      --bg: #0d0d0d;
+      --card: #1a1a1a;
+      --text: #ffffff;
+      --muted: #cccccc;
+    }
+
+    body.light-mode {
+      --bg: #f2f2f2;
+      --card: #ffffff;
+      --text: #000000;
+      --muted: #555555;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: sans-serif;
+      transition: background 0.3s ease, color 0.3s ease;
+      margin: 0;
+    }
+
+    .sidebar {
+      width: 220px;
+      background: var(--card);
+      height: 100vh;
+      position: fixed;
+      padding: 20px;
+    }
+
+    .logo {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0 25px 10px;
+    color: var(--text);
+}
+
+    .nav-links a {
+      display: block;
+      padding: 10px;
+      color: var(--text);
+      text-decoration: none;
+      margin-bottom: 10px;
+      background: var(--muted);
+      border-radius: 5px;
+    }
+
+    .theme-toggle {
+      margin-top: 20px;
+      background: var(--muted);
+      border: none;
+      color: var(--text);
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .main-content {
+      margin-left: 240px;
+      padding: 40px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .stock-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+
+    .green { color: #00ff80; }
+    .red { color: #ff4d4d; }
+
+    a {
+      color: inherit;
+    }
+  

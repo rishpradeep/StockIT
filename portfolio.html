@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StockIT PRO</title>
+
+  <!-- CSS Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/proversion.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <!-- Scripts -->
+  <script src="js/theme.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Register button styling -->
+  <style>
+    .top-bar {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      z-index: 10;
+    }
+
+    .register-btn {
+      background-color: #4ecdc4;
+      color: #111;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .register-btn:hover {
+      background-color: #38b2ac;
+      color: white;
+    }
+  </style>
+</head>
+
+<body class="dark-mode">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <button class="toggle-btn" onclick="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="logo">StockIT</div>
+
+    <div class="nav-links">
+      <a href="main.html"><i class="fas fa-home"></i><span>Home</span></a>
+      <a href="stock.html"><i class="fas fa-chart-line"></i><span>Stocks</span></a>
+      <a href="portfolio.html"><i class="fas fa-briefcase"></i><span>Portfolio</span></a>
+      <a href="news.html"><i class="fas fa-newspaper"></i><span>News</span></a>
+      <a href="proversion.html"><i class="fas fa-star"></i><span>PRO</span></a>
+    </div>
+
+    <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+  </aside>
+
+  <!-- Register Button -->
+  <div class="top-bar">
+    <a href="registration.html" class="register-btn">Register</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1>My Portfolio</h1>
+    <p>Track your investments and see live performance</p>
+
+    <div class="card-grid">
+      <!-- Holdings -->
+      <div class="card">
+        <h3>Current Holdings</h3>
+        <div class="stock-item red"><span>SBUX</span><span>-0.06%</span></div>
+        <div class="stock-item green"><span>MBG.BE</span><span>+1.52%</span></div>
+        <div class="stock-item green"><span>NVDA</span><span>+4.30%</span></div>
+        <div class="stock-item red"><span>VWAGY</span><span>-0.35%</span></div>
+      </div>
+
+      <!-- Summary -->
+      <div class="card">
+        <h3>Summary</h3>
+        <p>Total Invested: $14,322</p>
+        <p>Returns: $1,034</p>
+        <p>Return Rate: <span class="green">+7.21%</span></p>
+        <h4>Shares Owned</h4>
+        <ul class="news">
+          <li>SBUX: 57</li>
+          <li>MBG.BE: 37</li>
+          <li>NVDA: 76</li>
+          <li>VWAGY: 8</li>
+        </ul>
+      </div>
+
+      <!-- Pie Chart -->
+      <div class="card">
+        <h3>Portfolio Distribution</h3>
+        <canvas id="pieChart" width="100%" height="100"></canvas>
+      </div>
+
+      <!-- Bar Chart -->
+      <div class="card">
+        <h3>Returns by Stock</h3>
+        <canvas id="barChart" width="100%" height="100"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Optional: chart rendering scripts can go here -->
+</body>
+</html>

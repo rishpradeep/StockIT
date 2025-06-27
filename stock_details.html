@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stock Details</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --text: #ffffff;
+      --card: #1a1a1a;
+      --accent: #00ff80;
+      --btn-bg: #333;
+      --btn-text: #fff;
+    }
+
+    body.light-mode {
+      --bg: #f2f2f2;
+      --text: #000000;
+      --card: #ffffff;
+      --accent: #007f4f;
+      --btn-bg: #ddd;
+      --btn-text: #000;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .header {
+      padding: 20px;
+      text-align: center;
+      background-color: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      background: var(--card);
+      border-radius: 10px;
+      color: var(--text);
+    }
+
+    .metrics {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .metric {
+      flex: 1 1 200px;
+      padding: 10px;
+    }
+
+    .metric h3 {
+      margin-bottom: 5px;
+      color: var(--accent);
+    }
+
+    canvas {
+      max-width: 100%;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 10px;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-size: 16px;
+    }
+
+    .theme-toggle i {
+      font-size: 18px;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      padding: 8px 12px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <a href="main.html" class="back-button"><i class="fas fa-arrow-left"></i> Home</a>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+
+  <div class="header">
+    <h1 id="stock-title">Stock Details</h1>
+  </div>
+
+  <div class="container">
+    <div class="metrics">
+      <div class="metric">
+        <h3>Price</h3>
+        <p id="stock-price">Loading...</p>
+      </div>
+      <div class="metric">
+        <h3>Change</h3>
+        <p id="stock-change">Loading...</p>
+      </div>
+      <div class="metric">
+        <h3>Description</h3>
+        <p id="stock-description">Loading...</p>
+      </div>
+    </div>
+
+    <h2>5-Day Price Chart</h2>
+    <div style="height: 300px; background-color: var(--card); padding: 10px; border-radius: 8px;">
+      <canvas id="stockChart" style="width: 100%; height: 100%;"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const stockData = {
+      MSFT: {
+        price: "$332.50",
+        change: "+1.85%",
+        description: "Microsoft Corporation develops, licenses, and supports a wide range of software products, services, and devices. Known for Windows, Office, Azure cloud services, and its acquisition of LinkedIn and GitHub, Microsoft is one of the world's largest tech companies.",
+        chart: [
+          { x: 'Mon', o: 302, h: 310, l: 300, c: 305 },
+          { x: 'Tue', o: 305, h: 315, l: 304, c: 310 },
+          { x: 'Wed', o: 310, h: 312, l: 307, c: 308 },
+          { x: 'Thu', o: 308, h: 313, l: 306, c: 312 },
+          { x: 'Fri', o: 312, h: 316, l: 311, c: 315 }
+        ]
+      },
+      AAPL: {
+        price: "$145.70",
+        change: "-6.80%",
+        description: "Apple Inc. is a global leader in consumer electronics, software, and digital services. The company is best known for the iPhone, iPad, Mac computers, and services like iCloud and Apple Music. Apple is a symbol of innovation and user-focused design.",
+        chart: [
+          { x: 'Mon', o: 148, h: 150, l: 145, c: 147 },
+          { x: 'Tue', o: 147, h: 149, l: 144, c: 146 },
+          { x: 'Wed', o: 146, h: 148, l: 143, c: 145 },
+          { x: 'Thu', o: 145, h: 147, l: 142, c: 144 },
+          { x: 'Fri', o: 144, h: 146, l: 141, c: 143 }
+        ]
+      },
+      NKE: {
+        price: "$104.20",
+        change: "-0.02%",
+        description: "Nike, Inc. is a multinational corporation engaged in the design, development, manufacturing, and worldwide marketing of footwear, apparel, equipment, and accessories. It is the world’s largest supplier of athletic shoes and apparel and a major manufacturer of sports equipment.",
+        chart: [
+          { x: 'Mon', o: 106, h: 107, l: 103, c: 104 },
+          { x: 'Tue', o: 104, h: 106, l: 102, c: 105 },
+          { x: 'Wed', o: 105, h: 106, l: 103, c: 104 },
+          { x: 'Thu', o: 104, h: 105, l: 102, c: 103 },
+          { x: 'Fri', o: 103, h: 104, l: 101, c: 102 }
+        ]
+      }
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const symbol = params.get("symbol") || "MSFT";
+    const stock = stockData[symbol.toUpperCase()];
+    let chartInstance = null;
+
+    function renderChart() {
+      const ctx = document.getElementById('stockChart').getContext('2d');
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      const textColor = getComputedStyle(document.body).getPropertyValue('--text').trim();
+      const gridColor = textColor + '33';
+      const accentColor = stock.change.startsWith('-') ? '#ff4d4d' : getComputedStyle(document.body).getPropertyValue('--accent').trim();
+      const bgColor = stock.change.startsWith('-') ? '#ff4d4d33' : accentColor + '33';
+
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [{
+            label: symbol,
+            data: stock.chart.map(d => ({ x: d.x, y: d.c })),
+            borderColor: accentColor,
+            backgroundColor: bgColor,
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              type: 'category',
+              ticks: { color: textColor },
+              grid: { color: gridColor }
+            },
+            y: {
+              ticks: { color: textColor },
+              grid: { color: gridColor }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: { color: textColor }
+            }
+          }
+        }
+      });
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.contains("light-mode");
+      document.body.classList.toggle("light-mode", !isLight);
+      localStorage.setItem("theme", !isLight ? "light" : "dark");
+
+      // Re-render chart after theme changes
+      setTimeout(renderChart, 50);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem("theme") || "dark";
+      if (savedTheme === "light") {
+        document.body.classList.add("light-mode");
+      }
+
+      if (stock) {
+        document.title = `${symbol} Stock Details`;
+        document.getElementById("stock-title").textContent = `${symbol} Stock Details`;
+        document.getElementById("stock-price").textContent = stock.price;
+        document.getElementById("stock-change").textContent = stock.change;
+        document.getElementById("stock-description").textContent = stock.description;
+        renderChart();
+      } else {
+        document.title = "Stock Not Found";
+        const container = document.querySelector(".container");
+        container.innerHTML = `<p style='text-align:center; font-size: 18px;'>⚠️ No data available for symbol: <strong>${symbol}</strong></p>`;
+      }
+    });
+  </script>
+</body>
+</html>
