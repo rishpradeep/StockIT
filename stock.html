@@ -150,11 +150,12 @@
 
     function loadStockWatchlist() {
       const STOCK_API_KEY = 'QDG0YJEMZCIUHJQR'; // Replace if rate-limited
+      const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';   
       const symbols = ['MSFT', 'AAPL', 'NKE'];
       const container = document.getElementById('watchlist-container');
 
       symbols.forEach(symbol => {
-        fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${STOCK_API_KEY}`)
+        fetch(`${CORS_PROXY}https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${STOCK_API_KEY}`)
           .then(res => res.json())
           .then(data => {
             const quote = data["Global Quote"];
