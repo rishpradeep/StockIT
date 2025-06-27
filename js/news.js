@@ -32,7 +32,7 @@ function toggleTheme() {
             });
           } else {
             container.innerHTML = '<p>⚠️ No news available (check API response).</p>';
-            console.warn('NewsAPI response:', data);
+            console.warn('Marketaux response:', data);
           }
         })
         .catch(err => {
