@@ -16,7 +16,6 @@
       right: 30px;
       z-index: 10;
     }
-
     .register-btn {
       background-color: #4ecdc4;
       color: #111;
@@ -26,12 +25,10 @@
       text-decoration: none;
       transition: background 0.3s ease;
     }
-
     .register-btn:hover {
       background-color: #38b2ac;
       color: white;
     }
-
     .stock-item {
       display: flex;
       justify-content: space-between;
@@ -39,15 +36,14 @@
     }
   </style>
 </head>
+
 <body>
   <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <button class="toggle-btn" onclick="toggleSidebar()">
       <i class="fas fa-bars"></i>
     </button>
-
     <div class="logo">StockIT</div>
-
     <div class="nav-links">
       <a href="index.html"><i class="fas fa-home"></i><span> Home</span></a>
       <a href="stock.html"><i class="fas fa-chart-line"></i><span> Stocks</span></a>
@@ -55,30 +51,32 @@
       <a href="news.html"><i class="fas fa-newspaper"></i><span> News</span></a>
       <a href="proversion.html"><i class="fas fa-star"></i><span> PRO</span></a>
     </div>
-
-    <button class="theme-toggle" onclick="toggleTheme()">
-      <i class="fas fa-moon"></i>
-    </button>
+    <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
   </aside>
 
-  <!-- Register Button -->
+  
   <div class="top-bar">
     <a href="registration.html" class="register-btn">Register</a>
   </div>
 
-  <!-- Main Content -->
+ 
   <div class="main-content">
     <h1>Market Overview</h1>
     <p>Latest trends and selected stock insights</p>
 
+    <label for="currency-selector">Select Currency:</label>
+    <select id="currency-selector">
+      <option value="USD">USD</option>
+      <option value="EUR">EUR</option>
+      <option value="GBP">GBP</option>
+      <option value="INR">INR</option>
+    </select>
+
     <div class="card-grid">
-      <!-- Watchlist -->
       <div class="card">
         <h3>Watchlist</h3>
         <div id="watchlist-container"></div>
       </div>
-
-      <!-- Chart -->
       <div class="card">
         <h3>Performance</h3>
         <canvas id="stockChart"></canvas>
@@ -88,6 +86,7 @@
 
   <script>
     let chartInstance;
+    let exchangeRates = {};
 
     function createChart() {
       const ctx = document.getElementById('stockChart').getContext('2d');
@@ -100,27 +99,9 @@
         data: {
           labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
           datasets: [
-            {
-              label: 'MSFT',
-              data: [305, 310, 308, 312, 315],
-              borderColor: '#00ff80',
-              backgroundColor: 'transparent',
-              tension: 0.3
-            },
-            {
-              label: 'AAPL',
-              data: [180, 178, 179, 177, 175],
-              borderColor: '#ff4d4d',
-              backgroundColor: 'transparent',
-              tension: 0.3
-            },
-            {
-              label: 'NKE',
-              data: [122, 121, 119, 120, 121],
-              borderColor: '#3399ff',
-              backgroundColor: 'transparent',
-              tension: 0.3
-            }
+            { label: 'MSFT', data: [305, 310, 308, 312, 315], borderColor: '#00ff80', backgroundColor: 'transparent', tension: 0.3 },
+            { label: 'AAPL', data: [180, 178, 179, 177, 175], borderColor: '#ff4d4d', backgroundColor: 'transparent', tension: 0.3 },
+            { label: 'NKE', data: [122, 121, 119, 120, 121], borderColor: '#3399ff', backgroundColor: 'transparent', tension: 0.3 }
           ]
         },
         options: {
@@ -141,41 +122,69 @@
       body.classList.toggle("dark-mode", !isDark);
       body.classList.toggle("light-mode", isDark);
       localStorage.setItem("theme", isDark ? "light" : "dark");
-      createChart(); // refresh chart styling
+      createChart();
     }
 
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('collapsed');
     }
 
+    const currencySelector = document.getElementById('currency-selector');
+    currencySelector.addEventListener('change', loadStockWatchlist);
+
     function loadStockWatchlist() {
-      const STOCK_API_KEY = 'QDG0YJEMZCIUHJQR'; // Replace if rate-limited
-      const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';   
+      const STOCK_API_KEY = 'QDG0YJEMZCIUHJQR';
+      const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
       const symbols = ['MSFT', 'AAPL', 'NKE'];
       const container = document.getElementById('watchlist-container');
+      const selectedCurrency = currencySelector.value;
+      const conversionRate = exchangeRates[selectedCurrency] || 1;
+
+      container.innerHTML = '';
 
       symbols.forEach(symbol => {
         fetch(`${CORS_PROXY}https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${STOCK_API_KEY}`)
           .then(res => res.json())
           .then(data => {
+            console.log(`API Response for ${symbol}:`, data);
+
+            if (data.Note) {
+              console.warn(`Rate limit hit for ${symbol}:`, data.Note);
+              const row = document.createElement('div');
+              row.classList.add('stock-item');
+              row.textContent = `${symbol} - rate limit exceeded`;
+              container.appendChild(row);
+              return;
+            }
+
             const quote = data["Global Quote"];
-            if (!quote) throw new Error("No data");
+            if (!quote || !quote["05. price"]) {
+              console.warn(`No valid data for ${symbol}`);
+              const row = document.createElement('div');
+              row.classList.add('stock-item');
+              row.textContent = `${symbol} - data unavailable`;
+              container.appendChild(row);
+              return;
+            }
+
             const change = quote["10. change percent"] || 'N/A';
-            const price = quote["05. price"] || 'N/A';
+            const priceUSD = parseFloat(quote["05. price"]);
+            const convertedPrice = (priceUSD * conversionRate).toFixed(2);
             const color = change.includes('-') ? 'red' : 'green';
 
             const row = document.createElement('div');
             row.classList.add('stock-item');
             row.innerHTML = `
               <span><a href="stock_details.html?symbol=${symbol}" class="${color}">${symbol}</a></span>
-              <span class="${color}">$${parseFloat(price).toFixed(2)} (${change})</span>
+              <span class="${color}">${convertedPrice} ${selectedCurrency} (${change})</span>
             `;
             container.appendChild(row);
           })
-          .catch(() => {
+          .catch(err => {
+            console.error(`Error fetching ${symbol}:`, err);
             const row = document.createElement('div');
             row.classList.add('stock-item');
-            row.textContent = `${symbol} - data unavailable`;
+            row.textContent = `${symbol} - fetch error`;
             container.appendChild(row);
           });
       });
@@ -185,7 +194,19 @@
       const savedTheme = localStorage.getItem('theme') || 'dark';
       document.body.classList.add(`${savedTheme}-mode`);
       createChart();
-      loadStockWatchlist();
+
+      fetch('https://api.exchangerate.host/latest?base=USD')
+        .then(res => res.json())
+        .then(data => {
+          exchangeRates = data.rates;
+          loadStockWatchlist();
+        })
+        .catch(err => {
+          console.error('Failed to load exchange rates:', err);
+          alert('Currency rates unavailable. Prices shown in USD.');
+          exchangeRates = { USD: 1 };
+          loadStockWatchlist();
+        });
     });
   </script>
 </body>
