@@ -155,6 +155,7 @@
         fetch(`${CORS_PROXY}https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${STOCK_API_KEY}`)
           .then(res => res.json())
           .then(data => {
+            console.log('Full API Response for', symbol, data);
             const quote = data['Global Quote'];
             if (!quote || !quote['05. price']) throw new Error("No data");
 
